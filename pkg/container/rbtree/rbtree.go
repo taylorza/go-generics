@@ -1,7 +1,7 @@
 package rbtree
 
 import (
-	"constraints"
+	"golang.org/x/exp/constraints"
 )
 
 type color byte
