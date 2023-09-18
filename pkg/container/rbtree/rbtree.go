@@ -1,8 +1,6 @@
 package rbtree
 
-import (
-	"golang.org/x/exp/constraints"
-)
+import "cmp"
 
 type color byte
 
@@ -12,14 +10,14 @@ const (
 )
 
 // Node interface represents an entry in the tree.
-type Node[K constraints.Ordered, V any] interface {
+type Node[K cmp.Ordered, V any] interface {
 	// Key returns the key for the node in the tree.
 	Key() K
 	// Value returns the values associated with the node in the tree.
 	Value() V
 }
 
-type node[K constraints.Ordered, V any] struct {
+type node[K cmp.Ordered, V any] struct {
 	k K
 	v V
 	p *node[K, V]
@@ -54,21 +52,21 @@ func (n *node[K, V]) uncle() *node[K, V] {
 	return n.p.sibling()
 }
 
-func nodeColor[K constraints.Ordered, V any](n *node[K, V]) color {
+func nodeColor[K cmp.Ordered, V any](n *node[K, V]) color {
 	if n == nil {
 		return black
 	}
 	return n.c
 }
 
-func maxNode[K constraints.Ordered, V any](n *node[K, V]) *node[K, V] {
+func maxNode[K cmp.Ordered, V any](n *node[K, V]) *node[K, V] {
 	for n.r != nil {
 		n = n.r
 	}
 	return n
 }
 
-func newNode[K constraints.Ordered, V any](k K, v V, c color, l, r *node[K, V]) *node[K, V] {
+func newNode[K cmp.Ordered, V any](k K, v V, c color, l, r *node[K, V]) *node[K, V] {
 	n := &node[K, V]{k: k, v: v, c: c, l: l, r: r}
 	if l != nil {
 		l.p = n
@@ -80,13 +78,13 @@ func newNode[K constraints.Ordered, V any](k K, v V, c color, l, r *node[K, V]) 
 }
 
 // Tree is a red-black tree which is a self-balancing binary search tree.
-type Tree[K constraints.Ordered, V any] struct {
+type Tree[K cmp.Ordered, V any] struct {
 	root  *node[K, V]
 	count int
 }
 
 // New returns a new instance of a tree.
-func New[K constraints.Ordered, V any]() *Tree[K, V] {
+func New[K cmp.Ordered, V any]() *Tree[K, V] {
 	return &Tree[K, V]{}
 }
 
@@ -373,7 +371,7 @@ func (t *Tree[K, V]) IterChan() <-chan Node[K, V] {
 }
 
 // Iterator represents an iterator used to iterate items in the tree.
-type Iterator[K constraints.Ordered, V any] struct {
+type Iterator[K cmp.Ordered, V any] struct {
 	r *node[K, V]
 	c *node[K, V]
 	n *node[K, V]
